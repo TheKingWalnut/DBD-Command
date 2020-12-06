@@ -6,7 +6,7 @@ Each command starts with !streak, but the next word depends on what you want to 
   
 !streak set {killer name} {value} - Sets the given killer's streak to the given value
   
-!streak reset {OPTIONAL: KILLER NAME} - Sets current streak to 0. IF you choose to pass in a killer's name, then it will reset that killer's streak as well.
+!streak reset {killer name} - Sets the passed in killer's streak to zero.
 
 # COMMANDS ANYONE CAN USE
 !streak view - Returns the current streak and the best streak. *HAS NO INFO ON KILLER ATM*
