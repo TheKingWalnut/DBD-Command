@@ -43,6 +43,7 @@ def Execute(data): # function when command is called
 		except:
 			reset(user) # if that fails, just go in with the user 
 		return
+	send_message("Sorry, that's not a valid use.")
 	return
 
 def Tick():
