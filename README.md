@@ -4,7 +4,7 @@ Each command starts with !streak, but the next word depends on what you want to 
 # MOD ONLY COMMANDS
 !streak add {killer name} - Adds 1 to the passed in killer's streak. If that streak is now larger than the max streak, change max streak to that killer's streak. If the new killer streak is greater than that killer's old max streak, update the killer's max streak.
   
-!streak set {killer name} {value} - Sets the given killer's streak to the given value
+!streak set {killer name} {value} - Sets the given killer's streak to the given value.
   
 !streak reset {killer name} - Sets the passed in killer's streak to zero.
 
