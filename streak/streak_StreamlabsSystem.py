@@ -2,7 +2,7 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.0.0" # Version number
+Version = "1.0.2" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
 Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354"] # Shitty list of Mods lmao
@@ -13,6 +13,19 @@ currStreak = 0 # global streak
 
 def Init(): # initialize func
 	log("entered init") #logs entering
+	try:
+		f = open("test.txt", "r")
+		i = 0
+		for line in f:
+			i += 1
+			if i > 22:
+				pb[0] = int(line)
+				break
+			key, value = line.split(",")
+			killers[key] = int(value)
+		f.close()
+	except:
+		log("file no exist :(")
 	log("exited init") #logs leaving
 	return
 
@@ -55,9 +68,9 @@ def add(name, user): # add function
 	if not (user.lower() in Mods): # if the passed user is not in the mods list
 		log("not a mod") # log it
 		return # gtfo
-	if(name in killers): # if the passed name is in the list of killers
+	if(name.lower() in killers): # if the passed name is in the list of killers
 		log('name in killers')
-		killers[name] += 1 # add 1 to that killer's associated value
+		killers[name.lower()] += 1 # add 1 to that killer's associated value
 		ans = ("Streak for " + name + " has been updated.") # add the string to ans
 		currStreak += 1 # add 1 to currStreak
 		log('entering the name > maxStreak')
@@ -67,6 +80,14 @@ def add(name, user): # add function
 			ans += (" New max streak achieved! Streak of " + str(pb[0])) # add this on to the ans
 			log('we leaving')
 		log('we out')
+		f = open("test.txt", "w")
+		for i in killers:
+			f.write(i)
+			f.write(", ")
+			f.write(str(killers.get(i)))
+			f.write("\n")
+		f.write(str(pb[0]))
+		f.close()
 		send_message(ans) # return ans
 		return
 	log('did not work')
@@ -82,6 +103,14 @@ def set(name, val, user): # set function
 		killers[name] = val # set that killer's value to the appropriate value on the killer list
 		ans = ("Streak has been set to " + str(val)) # ans setting
 		send_message(ans) # return ans
+		f = open("test.txt", "w")
+		for i in killers:
+			f.write(i)
+			f.write(", ")
+			f.write(str(killers.get(i)))
+			f.write("\n")
+		f.write(str(pb[0]))
+		f.close()	
 		return
 	send_message("Oops, that killer was not found.") # if the killer isn't found, here's an error
 	return
@@ -103,6 +132,14 @@ def reset(user, *args, **kwargs): # reset function
 	if(args[0] != ""): # if a killer was passed in, reset that too
 		killers[args[0]] = 0 # set the killer's thing to 0
 		ans += " Streak for " + args[0] + " has been set to 0." # adds that you did that on to ans
+		f = open("test.txt", "w")
+	for i in killers:
+		f.write(i)
+		f.write(", ")
+		f.write(str(killers.get(i)))
+		f.write("\n")
+	f.write(str(pb[0]))
+	f.close()
 	send_message(ans) # returns ans
 
 def log(message): # log function for me :)
