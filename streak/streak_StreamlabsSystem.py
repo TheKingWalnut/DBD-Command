@@ -2,7 +2,7 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.0.2" # Version number
+Version = "1.0.3" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
 Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354"] # Shitty list of Mods lmao
@@ -10,6 +10,7 @@ Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "t
 from values import killers # import from external file
 from values import pb # import from external file
 currStreak = 0 # global streak
+bestKiller = ""
 
 def Init(): # initialize func
 	log("entered init") #logs entering
@@ -47,7 +48,10 @@ def Execute(data): # function when command is called
 		return
 	if(data.GetParam(1) == 'view'): # if the first thing after the command is view
 		log("entered view") # log
-		view() # go to view
+		try:
+			view(data.GetParam(2)) # tries to enter the reset function with the user who called it and a killer
+		except:
+			view() # if that fails, just go in with the user 
 		return
 	if(data.GetParam(1) == 'reset'): # if the first thing after the command is reset
 		log("entered reset") # log
@@ -60,6 +64,10 @@ def Execute(data): # function when command is called
 	return
 
 def Tick():
+	global bestKiller
+	for key in killers:
+		if killers[key] == int(pb[0]):
+			bestKiller = str(key).capitalize()
 	return
 
 def add(name, user): # add function
@@ -71,12 +79,12 @@ def add(name, user): # add function
 	if(name.lower() in killers): # if the passed name is in the list of killers
 		log('name in killers')
 		killers[name.lower()] += 1 # add 1 to that killer's associated value
-		ans = ("Streak for " + name + " has been updated.") # add the string to ans
+		ans = ("Streak for " + name.lower().capitalize() + " has been updated.") # add the string to ans
 		currStreak += 1 # add 1 to currStreak
 		log('entering the name > maxStreak')
-		if currStreak > pb[0]: # if the currStreak is greater than the best streak
+		if killers[name.lower()] > pb[0]: # if the currStreak is greater than the best streak
 			log('we in')
-			pb[0] = currStreak # make the best streak equal to currStreak
+			pb[0] = killers[name.lower()] # make the best streak equal to currStreak
 			ans += (" New max streak achieved! Streak of " + str(pb[0])) # add this on to the ans
 			log('we leaving')
 		log('we out')
@@ -99,8 +107,8 @@ def set(name, val, user): # set function
 	if not (user.lower() in Mods): # if the passed user is not in the mods list
 		log("not a mod") # log
 		return # grfo
-	if(name in killers): # if the passed name is in the killer list
-		killers[name] = val # set that killer's value to the appropriate value on the killer list
+	if(name.lower() in killers): # if the passed name is in the killer list
+		killers[name.lower()] = val # set that killer's value to the appropriate value on the killer list
 		ans = ("Streak has been set to " + str(val)) # ans setting
 		send_message(ans) # return ans
 		f = open("test.txt", "w")
@@ -115,10 +123,16 @@ def set(name, val, user): # set function
 	send_message("Oops, that killer was not found.") # if the killer isn't found, here's an error
 	return
 
-def view(): # view function
-	global currStreak # get the global currStreak
+def view(*args, **kwargs): # view function
 	log('in view')
-	ans = "Current streak is " + str(currStreak) + " and the max streak is " + str(int(pb[0])) # gets the currStreak and the best streak and puts them in a string
+	ans = ""
+	try:
+		streak = killers[args[0].lower()]
+		ans = "Adam's streak on " + str(args[0].lower().capitalize()) + " is " + str(streak) + ". "
+	except:
+		log("no arg passed")
+	ans += "The best streak is " + str(int(pb[0])) + " on " + bestKiller
+	#ans = "Current streak is " + str(currStreak) + " and the max streak is " + str(int(pb[0])) # gets the currStreak and the best streak and puts them in a string
 	send_message(ans) # returns the string
 	return
 
@@ -128,18 +142,20 @@ def reset(user, *args, **kwargs): # reset function
 		log("not a mod") # log
 		return # gtfo
 	currStreak = 0 # set the global currStreak to 0
-	ans = "Current Streak has been set to 0." # adds that it set the streak to 0 to ans
-	if(args[0] != ""): # if a killer was passed in, reset that too
-		killers[args[0]] = 0 # set the killer's thing to 0
-		ans += " Streak for " + args[0] + " has been set to 0." # adds that you did that on to ans
+	#ans = "Current Streak has been set to 0." # adds that it set the streak to 0 to ans
+	if args[0] != "": # if a killer was passed in, reset that too
+		killers[args[0].lower()] = 0 # set the killer's thing to 0
+		ans = " Streak for " + args[0].lower().capitalize() + " has been set to 0." # adds that you did that on to ans
 		f = open("test.txt", "w")
-	for i in killers:
-		f.write(i)
-		f.write(", ")
-		f.write(str(killers.get(i)))
-		f.write("\n")
-	f.write(str(pb[0]))
-	f.close()
+		for i in killers:
+			f.write(i)
+			f.write(", ")
+			f.write(str(killers.get(i)))
+			f.write("\n")
+		f.write(str(pb[0]))
+		f.close()
+	else:
+		ans = "Sorry, please specify a killer!"
 	send_message(ans) # returns ans
 
 def log(message): # log function for me :)
