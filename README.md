@@ -9,4 +9,4 @@ Each command starts with !streak, but the next word depends on what you want to 
 !streak reset {killer name} - Sets the passed in killer's streak to zero.
 
 # COMMANDS ANYONE CAN USE
-!streak view - Returns the current streak and the best streak. *HAS NO INFO ON KILLER ATM*
+!streak view {OPTIONAL: KILLER NAME}: Returns the max streak and who Adam was playing when he got that max streak. If a killer name is passed in, returns that killer's streak as well as the max streak.
