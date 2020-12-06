@@ -84,14 +84,15 @@ def add(name, user): # add function
 	if(name.lower() in killers): # if the passed name is in the list of killers
 		log('name in killers')
 		killers[name.lower()] += 1 # add 1 to that killer's associated value
+		ans = ("Streak for " + name.lower().capitalize() + " has been updated. ") # add the string to ans
 		if(killers[name.lower()] > maxkillers[name.lower()]):
 			maxkillers[name.lower()] = killers[name.lower()]
-		ans = ("Streak for " + name.lower().capitalize() + " has been updated.") # add the string to ans
+			ans += ("New best streak for " + name.lower().capitalize() + "! ")
 		log('entering the name > maxStreak')
 		if killers[name.lower()] > pb[0]: # if the currStreak is greater than the best streak
 			log('we in')
 			pb[0] = killers[name.lower()] # make the best streak equal to currStreak
-			ans += (" New max streak achieved! Streak of " + str(pb[0])) # add this on to the ans
+			ans += ("New overall best streak achieved! Streak of " + str(pb[0]) + ".") # add this on to the ans
 			log('we leaving')
 		log('we out')
 		f = open("test.txt", "w")
