@@ -2,7 +2,7 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.2.0" # Version number
+Version = "1.2.2" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
 Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354"] # Shitty list of Mods lmao
@@ -157,10 +157,16 @@ def view(*args, **kwargs): # view function
 	localbest = 0
 	localkiller = ""
 	for killer in killers:
+		log(str(killers[killer]))
 		if killers[killer] > localbest:
-			localbest = str(killers[killer])
+			log("Entered on " + killer)
+			localbest = killers[killer]
 			localkiller = str(killer)
-	ans += "The best active streak is " + str(localbest) + " on " + normalize(localkiller) + ". The best streak over all is " + str(int(pb[0])) + " on " + bestKiller + "."
+	if(localbest != 0):
+		ans += "The best active streak is " + str(localbest) + " on " + normalize(localkiller)
+	else:
+		ans += "There is no best active streak right now"
+	ans += ". The best streak over all is " + str(int(pb[0])) + " on " + bestKiller + "."
 	#ans = "Current streak is " + str(currStreak) + " and the max streak is " + str(int(pb[0])) # gets the currStreak and the best streak and puts them in a string
 	send_message(ans) # returns the string
 	return
