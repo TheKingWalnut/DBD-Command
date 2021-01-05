@@ -2,7 +2,7 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.3.1" # Version number
+Version = "1.3.4" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
 Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354"] # Shitty list of Mods lmao
@@ -17,10 +17,13 @@ def Init(): # initialize func
 	log("entered init") #logs entering
 	try:
 		f = open("test.txt", "r") #open a text file
+		log("File opened")
 		i = 0
 		for line in f: # for every line in the txt file
 			i += 1 #increment
-			if i > 44: #if i is over 44 (len of killers + max killers) 
+			log(str(i))
+			if i > 44: #if i is over 44 (len of killers + max killers)
+				log(line)
 				pb[0] = int(line) #set pb[0] to the pb[0] value stored
 				break # leave
 			elif i > 22: # if i is over 22 (len of killers)
@@ -75,28 +78,28 @@ def Tick():
 	for key in maxkillers: # goes thru dict by key
 		if maxkillers[key] == int(pb[0]): # if they value for any given killer is the current best
 			bestKiller = str(key).capitalize() # set best killer equal to that killer's name
+#	log("best killer is " + str(bestKiller) + " with streak " + str(pb[0]))
 	return
 
 def add(name, user): # add function
 	global currStreak # get the global currStreak value
 	log('in add')
 	if not (user.lower() in Mods): # if the passed user is not in the mods list
-		log("not a mod") # log it
+		log("add: not a mod") # log it
 		return # gtfo
 	if(name.lower() in killers): # if the passed name is in the list of killers
-		log('name in killers')
+		log('add: name in killers')
 		killers[name.lower()] += 1 # add 1 to that killer's associated value
 		ans = ("Streak for " + normalize(name) + " has been updated. ") # add the string to ans
 		if(killers[name.lower()] > maxkillers[name.lower()]): # if the current streak is better than that killers old best streak
 			maxkillers[name.lower()] = killers[name.lower()] # set maxkillers to killers best
 			ans += ("New best streak for " + normalize(name) + "! ") # dumb message letting you know it happened
-		log('entering the name > maxStreak')
+		log('add: entering the name > maxStreak')
 		if killers[name.lower()] > pb[0]: # if the currStreak is greater than the best streak
-			log('we in')
+			log('add: currStreak > pb[0]')
 			pb[0] = killers[name.lower()] # make the best streak equal to currStreak
 			ans += ("New overall best streak achieved! Streak of " + str(pb[0]) + ".") # add this on to the ans
-			log('we leaving')
-		log('we out')
+			log('exiting currStreak > pb[0]')
 		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
 		for i in killers:
 			f.write(i)
@@ -112,14 +115,14 @@ def add(name, user): # add function
 		f.close()
 		send_message(ans) # return ans
 		return
-	log('did not work')
+	log('add: did not work')
 	send_message("name not found") # if there name wasn't found, then send an error message
 	return
 
 def set(name, val, user): # set function
 	log('in set')
 	if not (user.lower() in Mods): # if the passed user is not in the mods list
-		log("not a mod") # log
+		log("set: not a mod") # log
 		return # grfo
 	if(name.lower() in killers): # if the passed name is in the killer list
 		killers[name.lower()] = int(val) # set that killer's value to the appropriate value on the killer list
@@ -168,11 +171,11 @@ def view(user, *args, **kwargs): # view function
 		ans = "Adam's current streak on " + str(normalize(args[0])) + " is " + str(streak) + ". " #adam's current streak
 		ans += "Adam's best streak on " + str(normalize(args[0])) + " is " + str(beststreak) + ". " #adam's best streak
 	except:
-		log("no arg passed")
+		log("view: no arg passed")
 	localbest = 0
 	localkiller = ""
 	for killer in killers:
-		log(str(killers[killer]))
+#		log(str(killers[killer]))
 		if killers[killer] > localbest:
 			log("Entered on " + killer)
 			localbest = killers[killer]
@@ -189,7 +192,7 @@ def view(user, *args, **kwargs): # view function
 def reset(user, *args, **kwargs): # reset function
 	global currStreak # get the global currStreak
 	if not (user.lower() in Mods): # if the passed user isn't a mod
-		log("not a mod") # log
+		log("reset: not a mod") # log
 		return # gtfo
 	currStreak = 0 # set the global currStreak to 0
 	#ans = "Current Streak has been set to 0." # adds that it set the streak to 0 to ans
