@@ -2,7 +2,7 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.3.0" # Version number
+Version = "1.3.1" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
 Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354"] # Shitty list of Mods lmao
@@ -125,6 +125,8 @@ def set(name, val, user): # set function
 		killers[name.lower()] = int(val) # set that killer's value to the appropriate value on the killer list
 		if killers[name.lower()] > maxkillers[name.lower()]: # if that is better than the old best
 			maxkillers[name.lower()] = int(killers[name.lower()]) # set the best to the current one
+		if killers[name.lower()] > pb[0]:
+			pb[0] = int(killers[name.lower()])
 		ans = ("Streak has been set to " + str(val)) # ans setting
 		send_message(ans) # return ans
 		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
