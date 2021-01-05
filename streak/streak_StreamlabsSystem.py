@@ -76,8 +76,9 @@ def Execute(data): # function when command is called
 def Tick():
 	global bestKiller
 	for key in maxkillers: # goes thru dict by key
-		if maxkillers[key] == int(pb[0]): # if they value for any given killer is the current best
+		if maxkillers[key] >= int(pb[0]): # if they value for any given killer is the current best
 			bestKiller = str(key).capitalize() # set best killer equal to that killer's name
+			pb[0] = int(maxkillers[key])
 #	log("best killer is " + str(bestKiller) + " with streak " + str(pb[0]))
 	return
 
