@@ -2,7 +2,7 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.2.2" # Version number
+Version = "1.3.0" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
 Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354"] # Shitty list of Mods lmao
@@ -55,7 +55,7 @@ def Execute(data): # function when command is called
 		log("entered view") # log
 		#Parent.AddUserCooldown(ScriptName, Command, data.User, 30) # sets a user cooldown for 30s
 		try:
-			view(data.GetParam(2)) # tries to enter the reset function with the user who called it and a killer
+			view(user, data.GetParam(2)) # tries to enter the reset function with the user who called it and a killer
 		except:
 			view() # if that fails, just go in with the user 
 		return
@@ -144,10 +144,23 @@ def set(name, val, user): # set function
 	send_message("Oops, that killer was not found.") # if the killer isn't found, here's an error
 	return
 
-def view(*args, **kwargs): # view function
+def view(user, *args, **kwargs): # view function
 	log('in view')
 	ans = ""
 	try: # this try block will look to see if the user passed in a killer to look at, and if they didn't, it'll just send the best overall streak.
+		log("Passed in value:" + str(args[0].lower()))
+		if ((args[0].lower() == "all") and (user.lower() in Mods)): # if the user typed in all and is a mod
+			ans += "Active: " # ans = active
+			for i in killers: # goes through killers and puts killer=value
+				ans += (i + "=")
+				ans += (str(killers[i]) + " ")
+			send_message(ans) #sends that
+			ans = "Max: " #resets ans to Max:
+			for i in maxkillers: #goes through max killers and puts maxkiller=value
+				ans += (i + "=") 
+				ans += (str(maxkillers[i]) + " ")
+			send_message(ans) #sends that
+			return
 		streak = killers[args[0].lower()] # set streak to the given killer's streak
 		beststreak = maxkillers[args[0].lower()] # get the best streak for the given killer
 		ans = "Adam's current streak on " + str(normalize(args[0])) + " is " + str(streak) + ". " #adam's current streak
