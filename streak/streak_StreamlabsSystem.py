@@ -179,7 +179,7 @@ def view(user, *args, **kwargs): # view function
 #		log(str(killers[killer]))
 		if killers[killer] > localbest:
 			log("Entered on " + killer)
-			localbest = killers[killer]
+			localbest = int(killers[killer])
 			localkiller = str(killer)
 	if(localbest != 0):
 		ans += "The best active streak is " + str(localbest) + " on " + normalize(localkiller)
