@@ -2,7 +2,7 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.3.5" # Version number
+Version = "1.3.7" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
 Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354"] # Shitty list of Mods lmao
@@ -19,17 +19,21 @@ def Init(): # initialize func
 		f = open("test.txt", "r") #open a text file
 		log("File opened")
 		i = 0
+		lenk = len(killers)
+		lenmk = lenk + len(maxkillers)
+		log(str(lenk))
+		log(str(lenmk))
 		for line in f: # for every line in the txt file
 			i += 1 #increment
 			log(str(i))
-			if i > 44: #if i is over 44 (len of killers + max killers)
+			if i > lenmk: #if i is over len of killers + max killers
 				log(line)
 				pb[0] = int(line) #set pb[0] to the pb[0] value stored
 				break # leave
-			elif i > 22: # if i is over 22 (len of killers)
+			elif i > lenk: # if i is over len of killers
 				key, value = line.split(",") # split the line into a key value pair
 				maxkillers[key] = int(value) # set maxkillers key to the value
-			else: # if i is less than 22 and 44
+			else: # if i is less than len of killers and len of killers + max killers
 				key, value = line.split(",") # split the line into a key value pair
 				killers[key] = int(value) # set killers key to the value
 		f.close()
@@ -216,7 +220,7 @@ def reset(user, *args, **kwargs): # reset function
 	else:
 		ans = "Sorry, please specify a killer!"
 	send_message(ans) # returns ans
-
+	
 def log(message): # log function for me :)
 	Parent.Log(Command, message)
 
