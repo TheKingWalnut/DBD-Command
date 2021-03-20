@@ -2,10 +2,12 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.3.7" # Version number
+Version = "1.4.2" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
-Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354"] # Shitty list of Mods lmao
+Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354", "abbyorwhatever"] # Shitty list of Mods lmao
+
+#TODO: Replace the user.lower in Mods with just a check if the user is a moderator lol
 
 from values import killers # List of all killers and their active streaks
 from values import maxkillers # List of all killers and their best streaks
@@ -73,6 +75,11 @@ def Execute(data): # function when command is called
 		except:
 			reset(user) # if that fails, just go in with the user 
 		return
+	if(data.GetParam(1) == 'dec'): # if the first thing after the command is dec
+		log("entered dec")
+		dec(data.GetParam(2), data.GetParam(3), user) # enters the dec function with the user, the killer, and the flag
+		return
+
 	log("goodbye")
 	send_message("Sorry, that's not a valid use.")
 	return
@@ -103,21 +110,23 @@ def add(name, user): # add function
 		if killers[name.lower()] > pb[0]: # if the currStreak is greater than the best streak
 			log('add: currStreak > pb[0]')
 			pb[0] = killers[name.lower()] # make the best streak equal to currStreak
-			ans += ("New overall best streak achieved! Streak of " + str(pb[0]) + ".") # add this on to the ans
+			ans += ("New overall best streak achieved! ") # add this on to the ans
 			log('exiting currStreak > pb[0]')
-		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
-		for i in killers:
-			f.write(i)
-			f.write(", ")
-			f.write(str(killers.get(i)))
-			f.write("\n")
-		for i in maxkillers:
-			f.write(i)
-			f.write(", ")
-			f.write(str(maxkillers.get(i)))
-			f.write("\n")
-		f.write(str(pb[0]))
-		f.close()
+		ans += ("Current streak is " + str(killers[name.lower()]) + ".") # prints the current streak at the end of the line.
+		writeToFile()
+#		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
+#		for i in killers:
+#			f.write(i)
+#			f.write(", ")
+#			f.write(str(killers.get(i)))
+#			f.write("\n")
+#		for i in maxkillers:
+#			f.write(i)
+#			f.write(", ")
+#			f.write(str(maxkillers.get(i)))
+#			f.write("\n")
+#		f.write(str(pb[0]))
+#		f.close()
 		send_message(ans) # return ans
 		return
 	log('add: did not work')
@@ -129,6 +138,11 @@ def set(name, val, user): # set function
 	if not (user.lower() in Mods): # if the passed user is not in the mods list
 		log("set: not a mod") # log
 		return # grfo
+	try:
+		x = int(val)
+	except:
+		log("set: val was not parsable")
+		return
 	if(name.lower() in killers): # if the passed name is in the killer list
 		killers[name.lower()] = int(val) # set that killer's value to the appropriate value on the killer list
 		if killers[name.lower()] > maxkillers[name.lower()]: # if that is better than the old best
@@ -137,19 +151,20 @@ def set(name, val, user): # set function
 			pb[0] = int(killers[name.lower()])
 		ans = ("Streak has been set to " + str(val)) # ans setting
 		send_message(ans) # return ans
-		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
-		for i in killers:
-			f.write(i)
-			f.write(", ")
-			f.write(str(killers.get(i)))
-			f.write("\n")
-		for i in maxkillers:
-			f.write(i)
-			f.write(", ")
-			f.write(str(maxkillers.get(i)))
-			f.write("\n")
-		f.write(str(pb[0]))
-		f.close()	
+		writeToFile()
+#		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
+#		for i in killers:
+#			f.write(i)
+#			f.write(", ")
+#			f.write(str(killers.get(i)))
+#			f.write("\n")
+#		for i in maxkillers:
+#			f.write(i)
+#			f.write(", ")
+#			f.write(str(maxkillers.get(i)))
+#			f.write("\n")
+#		f.write(str(pb[0]))
+#		f.close()	
 		return
 	send_message("Oops, that killer was not found.") # if the killer isn't found, here's an error
 	return
@@ -204,6 +219,55 @@ def reset(user, *args, **kwargs): # reset function
 	if args[0] != "": # if a killer was passed in, reset that too
 		killers[args[0].lower()] = 0 # set the killer's thing to 0
 		ans = " Streak for " + normalize(args[0]) + " has been set to 0." # adds that you did that on to ans
+		writeToFile()
+#		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
+#		for i in killers:
+#			f.write(i)
+#			f.write(", ")
+#			f.write(str(killers.get(i)))
+#			f.write("\n")
+#		for i in maxkillers:
+#			f.write(i)
+#			f.write(", ")
+#			f.write(str(maxkillers.get(i)))
+#			f.write("\n")
+#		f.write(str(pb[0]))
+#		f.close()
+	else:
+		ans = "Sorry, please specify a killer!"
+	send_message(ans) # returns ans
+
+#def dec(name, flag, user): # decrements the current score. IMPORTANT NOTE: flag is REQUIRED! flag must be ZERO or ONE! NOTHING ELSE!
+#	if not (user.lower() in Mods):
+#		log("dec: not a mod")
+#		return
+#	try:
+#		x = int(flag)
+#		if(x != 0 or x != 1):
+#			log("dec: flag was not 0 or 1")
+#	except:
+#		log("dec: flag was not parsable")
+#		return
+#	if (name.lower() in killers):
+#		killers[name.lower()] -= 1 # decrement the killer's streak by 1
+#		ans = ("Streak for " + normalize(name) + " has been decreased by one. ") # add the string to ans
+#		log("Killer was decremented by 1")
+#		if(int(flag) == 1):
+#			log("flag was 1")
+#			if(killers[name.lower()] + 1 == maxkillers[name.lower()]):
+#				maxkillers[name.lower()] -= 1
+#				ans += ("Max streak for " + normalize(name) + " has been decreased by one. ")
+#				if(maxkillers[name.lower()] + 1 >= pb[0]):
+#					pb[0] -= 1
+#					ans += ("Overall best has been restored to the previous best.")
+#		send_message(ans)
+#		return
+#	log("dec: name not in killers")
+#	send_message("Killer was not found")
+#	return
+
+def writeToFile():
+	try:
 		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
 		for i in killers:
 			f.write(i)
@@ -217,10 +281,10 @@ def reset(user, *args, **kwargs): # reset function
 			f.write("\n")
 		f.write(str(pb[0]))
 		f.close()
-	else:
-		ans = "Sorry, please specify a killer!"
-	send_message(ans) # returns ans
-	
+	except:
+		log("error occured when writing to file in writeToFile")
+	return
+
 def log(message): # log function for me :)
 	Parent.Log(Command, message)
 
