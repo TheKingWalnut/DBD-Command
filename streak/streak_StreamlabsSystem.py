@@ -2,7 +2,7 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.4.2" # Version number
+Version = "1.5.4" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
 Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354", "abbyorwhatever"] # Shitty list of Mods lmao
@@ -34,13 +34,19 @@ def Init(): # initialize func
 				break # leave
 			elif i > lenk: # if i is over len of killers
 				key, value = line.split(",") # split the line into a key value pair
-				maxkillers[key] = int(value) # set maxkillers key to the value
+				if(key in maxkillers): # make sure the killer is valid
+					maxkillers[key] = int(value) # set maxkillers key to the value
+				else:
+					i -= 1
 			else: # if i is less than len of killers and len of killers + max killers
 				key, value = line.split(",") # split the line into a key value pair
-				killers[key] = int(value) # set killers key to the value
+				if(key in killers): # make sure the killer is valid
+					killers[key] = int(value) # set killers key to the value
+				else:
+					i -= 1
 		f.close()
 	except:
-		log("file no exist :(")
+		send_message("Unexpected value when reading file, this is a big deal! Let Jack know ASAP!!!")
 	log("exited init") #logs leaving
 	return
 
@@ -77,11 +83,11 @@ def Execute(data): # function when command is called
 		return
 	if(data.GetParam(1) == 'dec'): # if the first thing after the command is dec
 		log("entered dec")
-		dec(data.GetParam(2), data.GetParam(3), user) # enters the dec function with the user, the killer, and the flag
+		dec(data.GetParam(2), user) # enters the dec function with the user and the killer
 		return
 
 	log("goodbye")
-	send_message("Sorry, that's not a valid use.")
+	send_message("The official uses are '!streak view' or '!streak view <killer>', so try those!")
 	return
 
 def Tick():
@@ -98,6 +104,7 @@ def add(name, user): # add function
 	log('in add')
 	if not (user.lower() in Mods): # if the passed user is not in the mods list
 		log("add: not a mod") # log it
+		send_message("Sorry, this is for mods only!")
 		return # gtfo
 	if(name.lower() in killers): # if the passed name is in the list of killers
 		log('add: name in killers')
@@ -114,59 +121,29 @@ def add(name, user): # add function
 			log('exiting currStreak > pb[0]')
 		ans += ("Current streak is " + str(killers[name.lower()]) + ".") # prints the current streak at the end of the line.
 		writeToFile()
-#		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
-#		for i in killers:
-#			f.write(i)
-#			f.write(", ")
-#			f.write(str(killers.get(i)))
-#			f.write("\n")
-#		for i in maxkillers:
-#			f.write(i)
-#			f.write(", ")
-#			f.write(str(maxkillers.get(i)))
-#			f.write("\n")
-#		f.write(str(pb[0]))
-#		f.close()
 		send_message(ans) # return ans
 		return
 	log('add: did not work')
-	send_message("name not found") # if there name wasn't found, then send an error message
+	send_message("Killer name not found. Make sure it's the official name!") # if there name wasn't found, then send an error message
 	return
 
 def set(name, val, user): # set function
 	log('in set')
 	if not (user.lower() in Mods): # if the passed user is not in the mods list
 		log("set: not a mod") # log
-		return # grfo
-	try:
-		x = int(val)
-	except:
-		log("set: val was not parsable")
-		return
+		send_message("Sorry, this is for mods only!")
+		return # gtfo
 	if(name.lower() in killers): # if the passed name is in the killer list
 		killers[name.lower()] = int(val) # set that killer's value to the appropriate value on the killer list
 		if killers[name.lower()] > maxkillers[name.lower()]: # if that is better than the old best
 			maxkillers[name.lower()] = int(killers[name.lower()]) # set the best to the current one
 		if killers[name.lower()] > pb[0]:
 			pb[0] = int(killers[name.lower()])
-		ans = ("Streak has been set to " + str(val)) # ans setting
+		ans = ("Streak for " + normalize(name) + " has been set to " + str(val) + ".") # ans setting
 		send_message(ans) # return ans
 		writeToFile()
-#		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
-#		for i in killers:
-#			f.write(i)
-#			f.write(", ")
-#			f.write(str(killers.get(i)))
-#			f.write("\n")
-#		for i in maxkillers:
-#			f.write(i)
-#			f.write(", ")
-#			f.write(str(maxkillers.get(i)))
-#			f.write("\n")
-#		f.write(str(pb[0]))
-#		f.close()	
 		return
-	send_message("Oops, that killer was not found.") # if the killer isn't found, here's an error
+	send_message("Killer name not found. Make sure it's the official name!") # if the killer isn't found, here's an error
 	return
 
 def view(user, *args, **kwargs): # view function
@@ -213,58 +190,36 @@ def reset(user, *args, **kwargs): # reset function
 	global currStreak # get the global currStreak
 	if not (user.lower() in Mods): # if the passed user isn't a mod
 		log("reset: not a mod") # log
+		send_message("Sorry, this is for mods only!")
 		return # gtfo
 	currStreak = 0 # set the global currStreak to 0
-	#ans = "Current Streak has been set to 0." # adds that it set the streak to 0 to ans
-	if args[0] != "": # if a killer was passed in, reset that too
+	if(args[0] != "" and args[0].lower() in killers):
 		killers[args[0].lower()] = 0 # set the killer's thing to 0
 		ans = " Streak for " + normalize(args[0]) + " has been set to 0." # adds that you did that on to ans
 		writeToFile()
-#		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
-#		for i in killers:
-#			f.write(i)
-#			f.write(", ")
-#			f.write(str(killers.get(i)))
-#			f.write("\n")
-#		for i in maxkillers:
-#			f.write(i)
-#			f.write(", ")
-#			f.write(str(maxkillers.get(i)))
-#			f.write("\n")
-#		f.write(str(pb[0]))
-#		f.close()
 	else:
-		ans = "Sorry, please specify a killer!"
+		ans = "Killer name not found. Make sure it's the official name!"
 	send_message(ans) # returns ans
 
-#def dec(name, flag, user): # decrements the current score. IMPORTANT NOTE: flag is REQUIRED! flag must be ZERO or ONE! NOTHING ELSE!
-#	if not (user.lower() in Mods):
-#		log("dec: not a mod")
-#		return
-#	try:
-#		x = int(flag)
-#		if(x != 0 or x != 1):
-#			log("dec: flag was not 0 or 1")
-#	except:
-#		log("dec: flag was not parsable")
-#		return
-#	if (name.lower() in killers):
-#		killers[name.lower()] -= 1 # decrement the killer's streak by 1
-#		ans = ("Streak for " + normalize(name) + " has been decreased by one. ") # add the string to ans
-#		log("Killer was decremented by 1")
-#		if(int(flag) == 1):
-#			log("flag was 1")
-#			if(killers[name.lower()] + 1 == maxkillers[name.lower()]):
-#				maxkillers[name.lower()] -= 1
-#				ans += ("Max streak for " + normalize(name) + " has been decreased by one. ")
-#				if(maxkillers[name.lower()] + 1 >= pb[0]):
-#					pb[0] -= 1
-#					ans += ("Overall best has been restored to the previous best.")
-#		send_message(ans)
-#		return
-#	log("dec: name not in killers")
-#	send_message("Killer was not found")
-#	return
+def dec(name, user): # decrements the current score.
+	if not (user.lower() in Mods):
+		log("dec: not a mod")
+		send_message("Sorry, this is for mods only!")
+		return
+	if (name.lower() in killers):
+		killers[name.lower()] -= 1
+		maxkillers[name.lower()] -= 1
+		ans = ("Max streak for " + normalize(name) + " has been decreased by one. ")
+		if(maxkillers[name.lower()] + 1 >= pb[0]):
+			pb[0] -= 1
+			ans += ("Best overall was decreased by 1, because the value for " + normalize(name) + " tied it. ")
+		ans += ("Active streak for " + normalize(name) + " was decreased by one as well, so if that's an issue, remember to !streak add!")
+		send_message(ans)
+		writeToFile()
+		return
+	log("dec: name not in killers")
+	send_message("Killer name not found. Make sure it's the official name!")
+	return
 
 def writeToFile():
 	try:
