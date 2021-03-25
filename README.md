@@ -8,5 +8,7 @@ Each command starts with !streak, but the next word depends on what you want to 
   
 !streak reset {killer name} - Sets the passed in killer's streak to zero.
 
+!streak dec {killer name} - Decrements the passed in killer's CURRENT streak AND BEST streak by one. Should only be used to undo an accidental double add! If the decremented max is equal to the best overall, it'll decrement that by one too, but that should fix itself.
+
 # COMMANDS ANYONE CAN USE
 !streak view {OPTIONAL: KILLER NAME}: Returns the max streak and who Adam was playing when he got that max streak. If a killer name is passed in, returns that killer's streak as well as their max streak and the overall max streak.
