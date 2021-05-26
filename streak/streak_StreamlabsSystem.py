@@ -2,16 +2,22 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.5.4" # Version number
+Version = "1.6.0" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
 Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354", "abbyorwhatever"] # Shitty list of Mods lmao
 
 #TODO: Replace the user.lower in Mods with just a check if the user is a moderator lol
 
-from values import killers # List of all killers and their active streaks
-from values import maxkillers # List of all killers and their best streaks
-from values import pb # Contains the best streaks Adam has had.
+# from values import killers # List of all killers and their active streaks
+# from values import maxkillers # List of all killers and their best streaks
+# from values import pb # Contains the best streaks Adam has had.
+
+killers = {'trapper': 0, 'wraith': 0, 'hillbilly': 0, 'nurse': 0, 'shape': 0, 'hag': 0, 'doctor': 0, 'huntress': 0, 'cannibal': 0, 'nightmare': 0, 'pig': 0, 'clown': 0, 'spirit': 0, 'legion': 0, 'plague': 0, 'ghostface': 0, 'demogorgon': 0, 'oni': 0, 'deathslinger': 0, 'executioner': 0, 'blight': 0, 'twins': 0, 'trickster': 0, 'nemesis': 0}
+pb = [0]
+maxkillers = {'trapper': 0, 'wraith': 0, 'hillbilly': 0, 'nurse': 0, 'shape': 0, 'hag': 0, 'doctor': 0, 'huntress': 0, 'cannibal': 0, 'nightmare': 0, 'pig': 0, 'clown': 0, 'spirit': 0, 'legion': 0, 'plague': 0, 'ghostface': 0, 'demogorgon': 0, 'oni': 0, 'deathslinger': 0, 'executioner': 0, 'blight': 0, 'twins': 0, 'trickster': 0, 'nemesis': 0}
+# These arrays are extremely ugly but it's easier than doing a separate values file, for now.
+
 currStreak = 0 # global streak
 bestKiller = ""
 
@@ -47,6 +53,7 @@ def Init(): # initialize func
 		f.close()
 	except:
 		send_message("Unexpected value when reading file, this is a big deal! Let Jack know ASAP!!!")
+		f.close()
 	log("exited init") #logs leaving
 	return
 
@@ -68,7 +75,12 @@ def Execute(data): # function when command is called
 		return
 	if(data.GetParam(1) == 'view'): # if the first thing after the command is view
 		log("entered view") # log
-		#Parent.AddUserCooldown(ScriptName, Command, data.User, 30) # sets a user cooldown for 30s
+		if not (user.lower() in Mods): # If the user isn't a mod, give them a 15s cooldown.
+			Parent.AddUserCooldown(ScriptName, Command, data.User, 15) # sets a user cooldown for 15s
+		if(Parent.IsOnCooldown(ScriptName, Command)):
+			log("CD")
+			return
+		Parent.AddCooldown(ScriptName, Command, 5); # Sets a global cooldown for 5 seconds, to avoid a weirdchamp one
 		try:
 			view(user, data.GetParam(2)) # tries to enter the reset function with the user who called it and a killer
 		except:
