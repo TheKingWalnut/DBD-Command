@@ -2,7 +2,7 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.6.1" # Version number
+Version = "1.6.3" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
 Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354", "abbyorwhatever"] # Shitty list of Mods lmao
@@ -235,6 +235,7 @@ def dec(name, user): # decrements the current score.
 	log("dec: name not in killers")
 	send_message("Killer name not found. Make sure it's the official name!")
 	return
+
 def ver(user):
 	if not (user.lower() in Mods):
 		log("ver: not a mod")
@@ -243,6 +244,12 @@ def ver(user):
 	ans = ("Version is " + Version)
 	send_message(ans)
 	return
+
+def Unload():
+	log("Wrote to file in Unload")
+	writeToFile()
+	return
+
 def writeToFile():
 	try:
 		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
