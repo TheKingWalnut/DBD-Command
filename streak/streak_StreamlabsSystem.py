@@ -97,7 +97,10 @@ def Execute(data): # function when command is called
 		log("entered dec")
 		dec(data.GetParam(2), user) # enters the dec function with the user and the killer
 		return
-
+	if(data.GetParam(1) == 'ver'): # if the first thing after the command is ver
+		log("entered ver")
+		ver(user) # enters the ver function with the user
+		return
 	log("goodbye")
 	send_message("The official uses are '!streak view' or '!streak view <killer>', so try those!")
 	return
@@ -232,7 +235,14 @@ def dec(name, user): # decrements the current score.
 	log("dec: name not in killers")
 	send_message("Killer name not found. Make sure it's the official name!")
 	return
-
+def ver(user):
+	if not (user.lower() in Mods):
+		log("ver: not a mod")
+		send_message("Sorry, this is a mod only command!")
+		return
+	ans = ("Version is " + Version)
+	send_message(ans)
+	return
 def writeToFile():
 	try:
 		f = open("test.txt", "w") # this bit just writes killers, maxkillers, and pb to a file so it can save between uses
