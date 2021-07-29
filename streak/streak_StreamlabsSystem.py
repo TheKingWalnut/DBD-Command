@@ -5,7 +5,7 @@ Creator = "TheKingWalnut" # Me :D
 Version = "1.6.3" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
-Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354", "abbyorwhatever"] # Shitty list of Mods lmao
+Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354", "abbyorwhatever", "starredcyan"] # Shitty list of Mods lmao
 
 #TODO: Replace the user.lower in Mods with just a check if the user is a moderator lol
 
