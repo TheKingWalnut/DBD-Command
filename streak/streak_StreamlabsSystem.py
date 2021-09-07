@@ -2,7 +2,7 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.6.3.1" # Version number
+Version = "1.6.4" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
 Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354", "abbyorwhatever", "starredcyan"] # Shitty list of Mods lmao
@@ -13,9 +13,9 @@ Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "t
 # from values import maxkillers # List of all killers and their best streaks
 # from values import pb # Contains the best streaks Adam has had.
 
-killers = {'trapper': 0, 'wraith': 0, 'hillbilly': 0, 'nurse': 0, 'shape': 0, 'hag': 0, 'doctor': 0, 'huntress': 0, 'cannibal': 0, 'nightmare': 0, 'pig': 0, 'clown': 0, 'spirit': 0, 'legion': 0, 'plague': 0, 'ghostface': 0, 'demogorgon': 0, 'oni': 0, 'deathslinger': 0, 'executioner': 0, 'blight': 0, 'twins': 0, 'trickster': 0, 'nemesis': 0}
+killers = {'trapper': 0, 'wraith': 0, 'hillbilly': 0, 'nurse': 0, 'shape': 0, 'hag': 0, 'doctor': 0, 'huntress': 0, 'cannibal': 0, 'nightmare': 0, 'pig': 0, 'clown': 0, 'spirit': 0, 'legion': 0, 'plague': 0, 'ghostface': 0, 'demogorgon': 0, 'oni': 0, 'deathslinger': 0, 'executioner': 0, 'blight': 0, 'twins': 0, 'trickster': 0, 'nemesis': 0, 'cenobite': 0}
 pb = [0]
-maxkillers = {'trapper': 0, 'wraith': 0, 'hillbilly': 0, 'nurse': 0, 'shape': 0, 'hag': 0, 'doctor': 0, 'huntress': 0, 'cannibal': 0, 'nightmare': 0, 'pig': 0, 'clown': 0, 'spirit': 0, 'legion': 0, 'plague': 0, 'ghostface': 0, 'demogorgon': 0, 'oni': 0, 'deathslinger': 0, 'executioner': 0, 'blight': 0, 'twins': 0, 'trickster': 0, 'nemesis': 0}
+maxkillers = {'trapper': 0, 'wraith': 0, 'hillbilly': 0, 'nurse': 0, 'shape': 0, 'hag': 0, 'doctor': 0, 'huntress': 0, 'cannibal': 0, 'nightmare': 0, 'pig': 0, 'clown': 0, 'spirit': 0, 'legion': 0, 'plague': 0, 'ghostface': 0, 'demogorgon': 0, 'oni': 0, 'deathslinger': 0, 'executioner': 0, 'blight': 0, 'twins': 0, 'trickster': 0, 'nemesis': 0, 'cenobite': 0}
 # These arrays are extremely ugly but it's easier than doing a separate values file, for now.
 
 currStreak = 0 # global streak
@@ -23,19 +23,19 @@ bestKiller = ""
 
 def Init(): # initialize func
 	log("entered init") #logs entering
+	i = 0
 	try:
 		f = open("test.txt", "r") #open a text file
 		log("File opened")
-		i = 0
 		lenk = len(killers)
 		lenmk = lenk + len(maxkillers)
-		log(str(lenk))
-		log(str(lenmk))
+		log("len of killers is " + str(lenk))
+		log("len of killers + maxkillers is " + str(lenmk))
 		for line in f: # for every line in the txt file
 			i += 1 #increment
-			log(str(i))
+			log("val of i is " + str(i))
 			if i > lenmk: #if i is over len of killers + max killers
-				log(line)
+				log("pb is " + line)
 				pb[0] = int(line) #set pb[0] to the pb[0] value stored
 				break # leave
 			elif i > lenk: # if i is over len of killers
@@ -52,6 +52,7 @@ def Init(): # initialize func
 					i -= 1
 		f.close()
 	except:
+		log("Error on line " + str(i) + " when reading file.")
 		send_message("Unexpected value when reading file, this is a big deal! Let Jack know ASAP!!!")
 		f.close()
 	log("exited init") #logs leaving
