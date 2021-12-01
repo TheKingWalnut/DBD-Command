@@ -2,16 +2,9 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.6.5" # Version number
+Version = "1.7.0" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
-Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354", "abbyorwhatever", "starredcyan"] # Shitty list of Mods lmao
-
-#TODO: Replace the user.lower in Mods with just a check if the user is a moderator lol
-
-# from values import killers # List of all killers and their active streaks
-# from values import maxkillers # List of all killers and their best streaks
-# from values import pb # Contains the best streaks Adam has had.
 
 killers = {'trapper': 0, 'wraith': 0, 'hillbilly': 0, 'nurse': 0, 'shape': 0, 'hag': 0, 'doctor': 0, 'huntress': 0, 'cannibal': 0, 'nightmare': 0, 'pig': 0, 'clown': 0, 'spirit': 0, 'legion': 0, 'plague': 0, 'ghostface': 0, 'demogorgon': 0, 'oni': 0, 'deathslinger': 0, 'executioner': 0, 'blight': 0, 'twins': 0, 'trickster': 0, 'nemesis': 0, 'cenobite': 0, 'artist': 0}
 pb = [0]
@@ -62,45 +55,47 @@ def Execute(data): # function when command is called
 	log("entered execute") #logged
 	if(data.GetParam(0) != Command or Parent.IsOnUserCooldown(ScriptName, Command, data.User)): # if the first thing isn't the command
 		return # leave
-	user = data.UserName # create a variable "user" that's the username of the user
+	userName = data.UserName # create a variable "user" that's the username of the user
+	userID = data.User
 	if(data.GetParamCount() > 4): # if there are more than 4 paramters
 		send_message("Error: Too many parameters.") # too many parameters for the command
 		return #leave
 	if(data.GetParam(1) == 'add'): # if the first thing after the command is add
 		log("entered add") #log
-		add(data.GetParam(2), user) # go to add, passing in the killer and the user who called it
+		add(data.GetParam(2), userID, userName) # go to add, passing in the killer and the user who called it
 		return
 	if(data.GetParam(1) == 'set'): # if the first thing after the command is set
 		log("entered set") # log
-		set(data.GetParam(2), data.GetParam(3), user) # go to set, passing in the killer, the val, and the user who called it
+		set(data.GetParam(2), data.GetParam(3), data.User, userName) # go to set, passing in the killer, the val, and the user who called it
 		return
 	if(data.GetParam(1) == 'view'): # if the first thing after the command is view
 		log("entered view") # log
-		if not (user.lower() in Mods): # If the user isn't a mod, give them a 15s cooldown.
+		if not (Parent.HasPermission(userID, "moderator", userName)): # If the user isn't a mod, give them a 15s cooldown.
 			Parent.AddUserCooldown(ScriptName, Command, data.User, 15) # sets a user cooldown for 15s
+			log("User %s is not a mod"%userName)
 		if(Parent.IsOnCooldown(ScriptName, Command)):
 			log("CD")
 			return
 		Parent.AddCooldown(ScriptName, Command, 5); # Sets a global cooldown for 5 seconds, to avoid a weirdchamp one
 		try:
-			view(user, data.GetParam(2)) # tries to enter the reset function with the user who called it and a killer
+			view(userID, userName, data.GetParam(2)) # tries to enter the view function with the user who called it and a killer
 		except:
-			view() # if that fails, just go in with the user 
+			view(userID, userName) # if that fails, just go in with the user 
 		return
 	if(data.GetParam(1) == 'reset'): # if the first thing after the command is reset
 		log("entered reset") # log
 		try:
-			reset(user, data.GetParam(2)) # tries to enter the reset function with the user who called it and a killer
+			reset(userID, userName, data.GetParam(2)) # tries to enter the reset function with the user who called it and a killer
 		except:
-			reset(user) # if that fails, just go in with the user 
+			reset(userID, userName) # if that fails, just go in with the user 
 		return
 	if(data.GetParam(1) == 'dec'): # if the first thing after the command is dec
 		log("entered dec")
-		dec(data.GetParam(2), user) # enters the dec function with the user and the killer
+		dec(data.GetParam(2), userID, userName) # enters the dec function with the user and the killer
 		return
 	if(data.GetParam(1) == 'ver'): # if the first thing after the command is ver
 		log("entered ver")
-		ver(user) # enters the ver function with the user
+		ver(userID, userName) # enters the ver function with the user
 		return
 	log("goodbye")
 	send_message("The official uses are '!streak view' or '!streak view <killer>', so try those!")
@@ -115,10 +110,10 @@ def Tick():
 #	log("best killer is " + str(bestKiller) + " with streak " + str(pb[0]))
 	return
 
-def add(name, user): # add function
+def add(name, userID, userName): # add function
 	global currStreak # get the global currStreak value
 	log('in add')
-	if not (user.lower() in Mods): # if the passed user is not in the mods list
+	if not (Parent.HasPermission(userID, "moderator", userName)): # if the passed user is not a mod
 		log("add: not a mod") # log it
 		send_message("Sorry, this is for mods only!")
 		return # gtfo
@@ -143,9 +138,9 @@ def add(name, user): # add function
 	send_message("Killer name not found. Make sure it's the official name!") # if there name wasn't found, then send an error message
 	return
 
-def set(name, val, user): # set function
+def set(name, val, userID, userName): # set function
 	log('in set')
-	if not (user.lower() in Mods): # if the passed user is not in the mods list
+	if not (Parent.HasPermission(userID, "moderator", userName)): # if the passed user is not a mod
 		log("set: not a mod") # log
 		send_message("Sorry, this is for mods only!")
 		return # gtfo
@@ -162,12 +157,12 @@ def set(name, val, user): # set function
 	send_message("Killer name not found. Make sure it's the official name!") # if the killer isn't found, here's an error
 	return
 
-def view(user, *args, **kwargs): # view function
+def view(userID, userName, *args, **kwargs): # view function
 	log('in view')
 	ans = ""
 	try: # this try block will look to see if the user passed in a killer to look at, and if they didn't, it'll just send the best overall streak.
 		log("Passed in value:" + str(args[0].lower()))
-		if ((args[0].lower() == "all") and (user.lower() in Mods)): # if the user typed in all and is a mod
+		if ((args[0].lower() == "all") and (Parent.HasPermission(userID, "moderator", userName))): # if the user typed in all and is a mod
 			ans += "Active: " # ans = active
 			for i in killers: # goes through killers and puts killer=value
 				ans += (i + "=")
@@ -202,9 +197,9 @@ def view(user, *args, **kwargs): # view function
 	send_message(ans) # returns the string
 	return
 
-def reset(user, *args, **kwargs): # reset function
+def reset(userID, userName, *args, **kwargs): # reset function
 	global currStreak # get the global currStreak
-	if not (user.lower() in Mods): # if the passed user isn't a mod
+	if not (Parent.HasPermission(userID, "moderator", userName)): # if the passed user isn't a mod
 		log("reset: not a mod") # log
 		send_message("Sorry, this is for mods only!")
 		return # gtfo
@@ -217,8 +212,8 @@ def reset(user, *args, **kwargs): # reset function
 		ans = "Killer name not found. Make sure it's the official name!"
 	send_message(ans) # returns ans
 
-def dec(name, user): # decrements the current score.
-	if not (user.lower() in Mods):
+def dec(name, userID, userName): # decrements the current score.
+	if not (Parent.HasPermission(userID, "moderator", userName)):
 		log("dec: not a mod")
 		send_message("Sorry, this is for mods only!")
 		return
@@ -237,8 +232,8 @@ def dec(name, user): # decrements the current score.
 	send_message("Killer name not found. Make sure it's the official name!")
 	return
 
-def ver(user):
-	if not (user.lower() in Mods):
+def ver(userID, userName):
+	if not (Parent.HasPermission(userID, "moderator", userName)):
 		log("ver: not a mod")
 		send_message("Sorry, this is a mod only command!")
 		return
