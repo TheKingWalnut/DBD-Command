@@ -2,7 +2,7 @@ ScriptName = "Streak" # name of script
 Website = "" # no website
 Description = "DBD Streak command. Too much stuff to put in this little thing" # command of description
 Creator = "TheKingWalnut" # Me :D
-Version = "1.6.4" # Version number
+Version = "1.6.5" # Version number
 Command = "!streak" # Command
 Params = ['add', 'set', 'view'] #parameters list I didn't use yet, but might use later
 Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "terrinx8", "deltac", "thekingwalnut", "mario7354", "abbyorwhatever", "starredcyan"] # Shitty list of Mods lmao
@@ -13,9 +13,9 @@ Mods = ["adamantlyme", "merrycrimi", "cheddar_fetter", "ravenclawseekergirl", "t
 # from values import maxkillers # List of all killers and their best streaks
 # from values import pb # Contains the best streaks Adam has had.
 
-killers = {'trapper': 0, 'wraith': 0, 'hillbilly': 0, 'nurse': 0, 'shape': 0, 'hag': 0, 'doctor': 0, 'huntress': 0, 'cannibal': 0, 'nightmare': 0, 'pig': 0, 'clown': 0, 'spirit': 0, 'legion': 0, 'plague': 0, 'ghostface': 0, 'demogorgon': 0, 'oni': 0, 'deathslinger': 0, 'executioner': 0, 'blight': 0, 'twins': 0, 'trickster': 0, 'nemesis': 0, 'cenobite': 0}
+killers = {'trapper': 0, 'wraith': 0, 'hillbilly': 0, 'nurse': 0, 'shape': 0, 'hag': 0, 'doctor': 0, 'huntress': 0, 'cannibal': 0, 'nightmare': 0, 'pig': 0, 'clown': 0, 'spirit': 0, 'legion': 0, 'plague': 0, 'ghostface': 0, 'demogorgon': 0, 'oni': 0, 'deathslinger': 0, 'executioner': 0, 'blight': 0, 'twins': 0, 'trickster': 0, 'nemesis': 0, 'cenobite': 0, 'artist': 0}
 pb = [0]
-maxkillers = {'trapper': 0, 'wraith': 0, 'hillbilly': 0, 'nurse': 0, 'shape': 0, 'hag': 0, 'doctor': 0, 'huntress': 0, 'cannibal': 0, 'nightmare': 0, 'pig': 0, 'clown': 0, 'spirit': 0, 'legion': 0, 'plague': 0, 'ghostface': 0, 'demogorgon': 0, 'oni': 0, 'deathslinger': 0, 'executioner': 0, 'blight': 0, 'twins': 0, 'trickster': 0, 'nemesis': 0, 'cenobite': 0}
+maxkillers = {'trapper': 0, 'wraith': 0, 'hillbilly': 0, 'nurse': 0, 'shape': 0, 'hag': 0, 'doctor': 0, 'huntress': 0, 'cannibal': 0, 'nightmare': 0, 'pig': 0, 'clown': 0, 'spirit': 0, 'legion': 0, 'plague': 0, 'ghostface': 0, 'demogorgon': 0, 'oni': 0, 'deathslinger': 0, 'executioner': 0, 'blight': 0, 'twins': 0, 'trickster': 0, 'nemesis': 0, 'cenobite': 0, 'artist': 0}
 # These arrays are extremely ugly but it's easier than doing a separate values file, for now.
 
 currStreak = 0 # global streak
